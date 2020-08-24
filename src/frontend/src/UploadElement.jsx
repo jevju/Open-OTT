@@ -23,7 +23,7 @@ export default class UploadElement extends React.Component {
             failed: false,
             uploadSpeed: 20,
             chunkSize: 1024*1024,
-            maxChunkSizeCoefficient: 2
+            maxChunkSizeCoefficient: 20
         }
 
         this.styles = {
@@ -99,7 +99,7 @@ export default class UploadElement extends React.Component {
             }
             var chunkSize = this.state.chunkSize * speed;
 
-            // var chunkSize = 1024*1024*2;
+            var chunkSize = 1024*1024*20;
 
 
             var query = this.prepareChunk();

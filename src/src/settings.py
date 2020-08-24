@@ -26,7 +26,10 @@ SECRET_KEY = '=l3u5j^!09j9%jk9#v16af#uz2)p0gdx!2ocpms9eg*kr2uw^3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '192.168.1.201',
+    '127.0.0.1'
+    ]
 
 
 # Application definition
@@ -127,6 +130,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024*1024*25 #Can set this to None to ignore check
 
 MEDIA_ROOT = './media'
 UPLOAD_TEMP_LOCATION = './media/tmp/'
