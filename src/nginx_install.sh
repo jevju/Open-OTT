@@ -21,6 +21,32 @@ install_nginx(){
 
     make && make install
 
+    cat <<EOF > /usr/local/nginx/nginx.conf
+    worker_processes  1;
+    events {
+        worker_connections  1024;
+    }
+    http {
+        include       mime.types;
+        default_type  application/octet-stream;
+        sendfile        on;
+        keepalive_timeout  65;
+        server {
+            listen       80;
+            server_name  localhost;
+            location / {
+                proxy_pass http://127.0.0.1:8000;
+            }
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   html;
+            }
+        }
+        client_max_body_size 0;
+    }
+
+EOF
+
     rm -rf /usr/local/src/pcre-8.44/
     rm -rf /usr/local/src/nginx-1.19.2/
 AsRoot
@@ -59,17 +85,18 @@ EOF
 
 
 AsRoot
-
-
 }
+
 
 uninstall(){
 
+  sudo -s <<AsRoot
   launchctl unload /Library/LaunchDaemons/nginx.plist
   rm /Library/LaunchDaemons/nginx.plist
   rm -rf /usr/local/nginx/
-
+AsRoot
 }
 
 install_nginx
 create_plist
+# uninstall
