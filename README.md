@@ -1,7 +1,7 @@
 # Open OTT Movie Service
 
 
-Read the full documentation [here](doc/toc.md)
+Read the full documentation [here](doc/documentation.md)
 
 ## Installation
 Install python dependencies from requirements.txt
