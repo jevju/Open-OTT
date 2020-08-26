@@ -12,15 +12,44 @@ export default class UploadFiles extends React.Component {
         }
     }
 
+
+
+
+    fileIsUploaded(f){
+
+
+
+
+        var query = '?';
+        query += 'type=exists';
+        query += '&size=' + String(this.props.file.size);
+        query += '&name=' + this.props.file.name;
+        query += '&lastModified=' + this.props.file.lastModified;
+
+
+
+
+
+
+
+
+        return false;
+
+    }
+
+
+
+
     handleFileSelection = (f) => {
 
         var newSelectedFiles = this.state.selectedFiles;
 
+
+        // Add files that is not already selected
         loop1:
             for(var i = 0; i < f.target.files.length; i++){
-        loop2:
                 for(var j = 0; j < newSelectedFiles.length; j++){
-                    if(newSelectedFiles[j].name == f.target.files[i].name){
+                    if(newSelectedFiles[j].name === f.target.files[i].name){
                         console.log('contains');
                         continue loop1;
                     }

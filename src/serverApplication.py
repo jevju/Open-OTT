@@ -1,6 +1,7 @@
 
 import time
 import rumps
+import subprocess
 
 WSGI_APPLICATION = 'gunicorn --bind 0.0.0.0:8000 src.wsgi'
 ICON = 'serverApplication.png'

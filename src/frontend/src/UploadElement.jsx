@@ -61,10 +61,12 @@ export default class UploadElement extends React.Component {
 
     handleUpload(){
 
+        var query = null;
+
         // Send init request
         if(!this.state.uploadId){
 
-            var query = this.prepareInit();
+            query = this.prepareInit();
             console.log("sending init packet")
             fetch(this.props.target + query)
             .then(res => {
@@ -99,10 +101,10 @@ export default class UploadElement extends React.Component {
             }
             var chunkSize = this.state.chunkSize * speed;
 
-            var chunkSize = 1024*1024*20;
+            chunkSize = 1024*1024*20;
 
 
-            var query = this.prepareChunk();
+            query = this.prepareChunk();
             // var chunk = this.props.file.slice(this.state.offset, this.state.offset + chunkSize);
             var chunk = this.props.file.slice(this.state.offset, this.state.offset + chunkSize);
 
@@ -136,7 +138,7 @@ export default class UploadElement extends React.Component {
         }
         // Last chunk sent, send end message
         else{
-            var query = this.prepareEnd();
+            query = this.prepareEnd();
             console.log('Sending end packet');
 
             fetch(this.props.target + query)
@@ -214,7 +216,7 @@ export default class UploadElement extends React.Component {
 
     renderProgressBar(){
 
-        if(!this.state.uploading && this.state.offset == 0){
+        if(!this.state.uploading && this.state.offset === 0){
             return;
         }
 
@@ -237,7 +239,10 @@ export default class UploadElement extends React.Component {
         return (
             <div>
                 <div style={style}><ProgressBar progress={progress}/></div>
-                <div>{progress}%</div>
+                <div>
+                    {progress}% (
+                    {Number(this.state.offset/(1073741824)).toFixed(1)} of {Number(this.props.file.size/(1073741824)).toFixed(1)} GB)
+                </div>
             </div>
         )
     }
