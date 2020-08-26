@@ -52,7 +52,7 @@ Conversion notes:
 
 
 
-## Introduction  {#introduction}
+## Introduction 
 
 The goal is to make an open source on demand service by hosting a movie server and access the content through a web browser. Both administration of the movie library, and watching. This documentation is primarily meant as a reference guide while developing, addressing new ideas and problems and reflecting solutions, but may also be useful for whoever wants to gain a technical insight to the solutions and implementation of the system.
 
