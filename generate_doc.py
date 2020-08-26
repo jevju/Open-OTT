@@ -46,7 +46,7 @@ def generateTableOfContent(p):
 
                     toc_line += b
                     toc_line += ('[' + tmp_line + ']')
-                    toc_line += ('(#' + tmp_line.replace(' ', '-').lower() + ')')
+                    toc_line += ('(' + tmp_line.replace(' ', '-').lower() + ')')
                     # print(toc_line)
                     toc_line += '\n'
                     toc.append(toc_line)
