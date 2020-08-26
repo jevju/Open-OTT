@@ -1,4 +1,5 @@
-# Open OTT 
+
+ # Open OTT
  
  
   - [Open OTT](#open-ott)
@@ -14,30 +15,30 @@
  	 - [Streaming from the library](#streaming-from-the-library)
  	 - [Deleting from the library](#deleting-from-the-library)
   - [Movie metadata](#movie-metadata)
- 		 - [Movapi (movie metadata API)](#movapi-(movie-metadata-api))
- 		 - [Server monitor](#server-monitor)
- 		 - [Database table models](#database-table-models)
+ 	 - [Movapi (movie metadata API)](#movapi-(movie-metadata-api))
+ 	 - [Server monitor](#server-monitor)
+ 	 - [Database table models](#database-table-models)
   - [Front end](#front-end)
- 		 - [Initial registration and setup](#initial-registration-and-setup)
- 		 - [Responsive design](#responsive-design)
- 		 - [Categories](#categories)
- 		 - [Franchises](#franchises)
- 		 - [Collections](#collections)
- 		 - [Genres](#genres)
+ 	 - [Initial registration and setup](#initial-registration-and-setup)
+ 	 - [Responsive design](#responsive-design)
+ 	 - [Categories](#categories)
+ 	 - [Franchises](#franchises)
+ 	 - [Collections](#collections)
+ 	 - [Genres](#genres)
   - [Production environment (setup/ build)](#production-environment-(setup/-build))
- 			 - [WSGI (Gunicorn)](#wsgi-(gunicorn))
- 			 - [Web server (Nginx)](#web-server-(nginx))
+ 	 - [WSGI (Gunicorn)](#wsgi-(gunicorn))
+ 	 - [Web server (Nginx)](#web-server-(nginx))
   - [Future ideas](#future-ideas)
- 		 - [React native for appleTV](#react-native-for-appletv)
- 		 - [Centralized hosting for user data](#centralized-hosting-for-user-data)
- 		 - [Server Side transcoding](#server-side-transcoding)
- 		 - [Backup server(s)](#backup-server(s))
- 		 - [OSX status bar](#osx-status-bar)
- 		 - [Server configuration page](#server-configuration-page)
- 		 - [Docker to serve Nginx, WSGI and Django inside container](#docker-to-serve-nginx,-wsgi-and-django-inside-container)
- 		 - [Nginx HTTPS (OpenSSL etc..)](#nginx-https-(openssl-etc..))
- 		 - [Music library](#music-library)
- 		 - [Photo library](#photo-library)
+ 	 - [React native for appleTV](#react-native-for-appletv)
+ 	 - [Centralized hosting for user data](#centralized-hosting-for-user-data)
+ 	 - [Server Side transcoding](#server-side-transcoding)
+ 	 - [Backup server(s)](#backup-server(s))
+ 	 - [OSX status bar](#osx-status-bar)
+ 	 - [Server configuration page](#server-configuration-page)
+ 	 - [Docker to serve Nginx, WSGI and Django inside container](#docker-to-serve-nginx,-wsgi-and-django-inside-container)
+ 	 - [Nginx HTTPS (OpenSSL etc..)](#nginx-https-(openssl-etc..))
+ 	 - [Music library](#music-library)
+ 	 - [Photo library](#photo-library)
 
  
  
@@ -151,7 +152,7 @@
  
  # Movie metadata  
  
- ### Movapi (movie metadata API)  
+ ## Movapi (movie metadata API)  
  API to retrieve movie metadata. Scrape IMDb
  
  Extended functionality to retrieve from rottentomatoes and downloading movie trailers etc
@@ -161,7 +162,7 @@
  All results are saved in a database. When movapi receives a request, it starts by searching in the table for the movie. If the movie is found in the table, it is returned in the response. If not, retrieve it from IMDB and save it in the table before returning the response. The cache speeds up the search for movies already retrieved, and it prevents unnecessary requests to IMDB.
  
  
- ### Server monitor  
+ ## Server monitor  
  Provides statistics about the server such as disk capacity etc. warning when server starts to fill up.
  
  Monitor how many bytes of data sent and data received. (Django middleware for this?)
@@ -203,7 +204,7 @@
  [imdb id]
  
  
- ### Database table models  
+ ## Database table models  
  Movie table
  
  Metadata about movies, retrieved from IMDb and other sources
@@ -231,13 +232,13 @@
  
  # Front end  
  
- ### Initial registration and setup  
+ ## Initial registration and setup  
  The user has the option to either log in or create a new user account. After creating the account and logging in, the user is asked to select an existing movie library or create a new one. Creating a new one, the user needs to specify a location for the library. A default location is shown. Adding an existing library (using URL), the user must have user access to the library (from another user). If the movie library is empty, the user is taken directly to the upload page.
  
  The main page is an “infinite scroll” of categories, collections and franchises. Each row is a carousel of movies.
  
  
- ### Responsive design  
+ ## Responsive design  
  Make it easy to navigate on small screens.
  
  Maybe remove some functionality, like uploading files.
@@ -245,11 +246,11 @@
  Either use a m. domain, or just detect screen size.
  
  
- ### Categories  
+ ## Categories  
  List of categories to show when browsing movies. Categories with belonging movies stored in the categories db table.
  
  
- ### Franchises  
+ ## Franchises  
  List of movie franchises to show when browsing movies. Stored in the collections db table
  
  Top action/ adventure franchises here
@@ -257,21 +258,21 @@
  [https://geekologie.com/image.php?path=/2013/06/28/highest-grossing-movie-franchises-large.jpg](https://geekologie.com/image.php?path=/2013/06/28/highest-grossing-movie-franchises-large.jpg)
  
  
- ### Collections  
+ ## Collections  
  
- ### Genres  
+ ## Genres  
  
  # Production environment (setup/ build)  
  This section is not about the OTT application itself, but describes an approach of how to prepare and run it in a production environment. Even if the system is only meant to be run locally, it is preferred to have a stable and solid environment to run inside. The setup provides functionality like start on system boot and always keep alive. Note that there are many ways of serving a system like this, and this is not a claim of being the best way to do it. Nonetheless this is a proven setup, which should work for most cases.
  
  
- #### WSGI (Gunicorn)  
+ ## WSGI (Gunicorn)  
  The default server provided through Django is only meant for development and should never be used in production. Instead a WSGI server is used to host the Django application. Django comes with wsgi.py that contains the python callable used by the WSGI server. There are several WSGI server options available. Gunicorn is used in this setup as it is a reliable server with an easy setup. Installation is available through pip. Gunicorn might be replaced by uWSGI at a later point as it tends to be faster and Nginx supports the uWSGI protocol natively.
  
  Sticks to Gunicorn for now, as it serves its purpose.
  
  
- #### Web server (Nginx)  
+ ## Web server (Nginx)  
  The web server is listening on port 80, and configured as a reverse proxy to forward incoming requests to the WSGI server, and sends the response from the Django application back to the client.
  
  Nginx installation and configuration for OSX (nginx_install.sh):
@@ -301,17 +302,17 @@
  Functionality that might, or might not, be added at a later point.
  
  
- ### React native for appleTV   
+ ## React native for appleTV   
  Compile to an iOS app to run the front end as an Apple TV app. May also compile to android (run directly on smart tv?) or mobile apps. This opens up the possibility of not having to use a web browser to access the front end, and ideally Apple TV’s remote can be used to browse the front end app.
  
  
- ### Centralized hosting for user data  
+ ## Centralized hosting for user data  
  Having a public site for users to register and holds all accounts. Then users register their local movie servers. Makes it possible to link several users to the same movie server.
  
  When installing a movie server, the user prompts a token linked to the user. It will show up in the users browser and now possible to interact with the server. Multiple users may have access to one server, and one user may have access to multiple servers, providing a larger movie library by merging the content when accessed in the browser.
  
  
- ### Server Side transcoding  
+ ## Server Side transcoding  
  Uploading one (possibly high quality version like BluRay MKV) the server automatically transcodes the video file to resolution or bitrate better suited for streaming.
  
  Might also be useful to let the user manually start transcoding a specific file using the web interface.
@@ -321,17 +322,17 @@
  Because of the hardware requirements, the transcoding option could be disabled by default, and activated by the user in the server settings. Maybe add a hardware test before allowing this.
  
  
- ### Backup server(s)  
+ ## Backup server(s)  
  Having the ability to host multiple servers for backup purposes as well as choosing the closest server to stream from. The servers need to synchronize in order to always have the same state in terms of uploaded files. Look into rsync, to see if it can be used to synchronize the media library folder.
  
  Or simply implement an own solution.
  
  
- ### OSX status bar  
+ ## OSX status bar  
  When the server is running as a daemon on the mac OSX, an icon is shown in the status bar to show notifications, settings etc. Look into Rums (Python package) or PyObjC to achieve this in python.
  
  
- ### Server configuration page  
+ ## Server configuration page  
  A page to adjust settings to the server. Examples of settings:
  
  
@@ -341,13 +342,13 @@
  *   
  
  
- ### Docker to serve Nginx, WSGI and Django inside container  
+ ## Docker to serve Nginx, WSGI and Django inside container  
  [https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/](https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/)
  
  
- ### Nginx HTTPS (OpenSSL etc..)  
+ ## Nginx HTTPS (OpenSSL etc..)  
  
- ### Music library  
+ ## Music library  
  Extend the library to support music.
  
  Upload music library
@@ -357,7 +358,7 @@
  Play to different sources, multiroom support, delay correction etc.
  
  
- ### Photo library  
+ ## Photo library  
  The library can be extended to even support photos. It would be for private photos.
  
  Users can create their own albums. Not meant to be used for any editing or backup of all pictures, but rather for storing and viewing the selected best pictures.
