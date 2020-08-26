@@ -25,7 +25,7 @@
  ## Open OTT Streaming Service
  
  - [Open OTT Streaming Service](#open-ott-streaming-service)
-  * [Introduction](#introduction)
+  - [Introduction](#introduction)
     
  
  ### Introduction   
