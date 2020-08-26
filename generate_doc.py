@@ -1,15 +1,13 @@
-
 import md_toc
 
+toc = md_toc.build_toc('doc/documentation.md')
 
+with open('doc/documentation.md', 'r+') as f:
 
+    doc = f.read()
+    doc = doc.replace('[TOC]', toc)
 
-
-res = md_toc.build_toc('doc/documentation.md')
-with open('doc/toc.md', 'w') as f:
-
-    # doc = f.read()
-    #
     # print(doc)
-
-    f.write(res)
+    f.seek(0)
+    f.write(doc)
+    f.truncate()

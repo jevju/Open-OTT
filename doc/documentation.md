@@ -1,8 +1,54 @@
+<!-- Copy and paste the converted output. -->
+
+<!-----
+NEW: Check the "Suppress top comment" option to remove this info from the output.
+
+Conversion time: 0.766 seconds.
+
+
+Using this Markdown file:
+
+1. Paste this output into your source file.
+2. See the notes and action items below regarding this conversion run.
+3. Check the rendered output (headings, lists, code blocks, tables) for proper
+   formatting and use a linkchecker before you publish this page.
+
+Conversion notes:
+
+* Docs to Markdown version 1.0β29
+* Wed Aug 26 2020 01:34:51 GMT-0700 (PDT)
+* Source doc: Moviesite
+----->
+
+
 
 # Open OTT Streaming Service
 
 
-[a](toc.md)
+- [Open OTT Streaming Service](#open-ott-streaming-service)
+  - [Introduction  {#introduction}](#introduction--introduction)
+    - [Requirements {#requirements}](#requirements-requirements)
+  - [Server side parts {#server-side-parts}](#server-side-parts-server-side-parts)
+    - [Adding files \[client side\] {#adding-files-\[client-side\]}](#adding-files-client-side-adding-files-client-side)
+    - [Resumable upload {#resumable-upload}](#resumable-upload-resumable-upload)
+    - [Movapi (movie metadata API) {#movapi-movie-metadata-api}](#movapi-movie-metadata-api-movapi-movie-metadata-api)
+    - [Server monitor {#server-monitor}](#server-monitor-server-monitor)
+    - [Database models {#database-models}](#database-models-database-models)
+  - [Front end {#front-end}](#front-end-front-end)
+    - [Initial registration and setup {#initial-registration-and-setup}](#initial-registration-and-setup-initial-registration-and-setup)
+    - [Categories {#categories}](#categories-categories)
+    - [Franchises {#franchises}](#franchises-franchises)
+    - [Collections {#collections}](#collections-collections)
+    - [Genres {#genres}](#genres-genres)
+  - [Production setup/ build {#production-setup-build}](#production-setup-build-production-setup-build)
+  - [Future ideas {#future-ideas}](#future-ideas-future-ideas)
+    - [React native for appleTV  {#react-native-for-appletv}](#react-native-for-appletv--react-native-for-appletv)
+    - [Centralized hosting for user data {#centralized-hosting-for-user-data}](#centralized-hosting-for-user-data-centralized-hosting-for-user-data)
+    - [Backup server(s) {#backup-server-s}](#backup-servers-backup-server-s)
+    - [Mac OS status bar {#mac-os-status-bar}](#mac-os-status-bar-mac-os-status-bar)
+    - [Docker to serve Nginx, WSGI and Django inside container {#docker-to-serve-nginx-wsgi-and-django-inside-container}](#docker-to-serve-nginx-wsgi-and-django-inside-container-docker-to-serve-nginx-wsgi-and-django-inside-container)
+    - [Nginx HTTPS (OpenSSL etc..) {#nginx-https-openssl-etc}](#nginx-https-openssl-etc-nginx-https-openssl-etc)
+
 
 
 
