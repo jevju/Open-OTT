@@ -3,7 +3,7 @@
  <!-----
  NEW: Check the "Suppress top comment" option to remove this info from the output.
  
- Conversion time: 0.766 seconds.
+ Conversion time: 1.003 seconds.
  
  
  Using this Markdown file:
@@ -16,49 +16,49 @@
  Conversion notes:
  
  * Docs to Markdown version 1.0β29
- * Wed Aug 26 2020 01:34:51 GMT-0700 (PDT)
+ * Wed Aug 26 2020 02:16:19 GMT-0700 (PDT)
  * Source doc: Moviesite
  ----->
  
  
  
- # Open OTT Streaming Service
+ ## Open OTT Streaming Service
  
  
-  - [Open OTT Streaming Service](open-ott-streaming-service)
- 	 - [Introduction](introduction)
- 		 - [Requirements](requirements)
- 	 - [Server side parts](server-side-parts)
- 		 - [Adding files [client side]](adding-files-[client-side])
- 		 - [Resumable upload](resumable-upload)
- 		 - [Movapi (movie metadata API)](movapi-(movie-metadata-api))
- 		 - [Server monitor](server-monitor)
- 		 - [Database models](database-models)
- 	 - [Front end](front-end)
- 		 - [Initial registration and setup](initial-registration-and-setup)
- 		 - [Categories](categories)
- 		 - [Franchises](franchises)
- 		 - [Collections](collections)
- 		 - [Genres](genres)
- 	 - [Production setup/ build](production-setup/-build)
- 			 - [WSGI (Gunicorn)](wsgi-(gunicorn))
- 			 - [Web server (Nginx)](web-server-(nginx))
- 	 - [Future ideas](future-ideas)
- 		 - [React native for appleTV](react-native-for-appletv)
- 		 - [Centralized hosting for user data](centralized-hosting-for-user-data)
- 		 - [Backup server(s)](backup-server(s))
- 		 - [Mac OS status bar](mac-os-status-bar)
- 		 - [Docker to serve Nginx, WSGI and Django inside container](docker-to-serve-nginx,-wsgi-and-django-inside-container)
- 		 - [Nginx HTTPS (OpenSSL etc..)](nginx-https-(openssl-etc..))
+ 	* [Open OTT Streaming Service](open-ott-streaming-service)
+ 		* [Introduction](introduction)
+ 			* [Requirements](requirements)
+ 		* [Server side parts](server-side-parts)
+ 			* [Adding files [client side]](adding-files-[client-side])
+ 			* [Resumable upload](resumable-upload)
+ 			* [Movapi (movie metadata API)](movapi-(movie-metadata-api))
+ 			* [Server monitor](server-monitor)
+ 			* [Database models](database-models)
+ 		* [Front end](front-end)
+ 			* [Initial registration and setup](initial-registration-and-setup)
+ 			* [Categories](categories)
+ 			* [Franchises](franchises)
+ 			* [Collections](collections)
+ 			* [Genres](genres)
+ 		* [Production setup/ build](production-setup/-build)
+ 				* [WSGI (Gunicorn)](wsgi-(gunicorn))
+ 				* [Web server (Nginx)](web-server-(nginx))
+ 		* [Future ideas](future-ideas)
+ 			* [React native for appleTV](react-native-for-appletv)
+ 			* [Centralized hosting for user data](centralized-hosting-for-user-data)
+ 			* [Backup server(s)](backup-server(s))
+ 			* [Mac OS status bar](mac-os-status-bar)
+ 			* [Docker to serve Nginx, WSGI and Django inside container](docker-to-serve-nginx,-wsgi-and-django-inside-container)
+ 			* [Nginx HTTPS (OpenSSL etc..)](nginx-https-(openssl-etc..))
 
  
  
  
- ## Introduction   
+ ### Introduction   
  The goal is to make an open source on demand service by hosting a movie server and access the content through a web browser. Both administration of the movie library, and watching. This documentation is primarily meant as a reference guide while developing, addressing new ideas and problems and reflecting solutions, but may also be useful for whoever wants to gain a technical insight to the solutions and implementation of the system.
  
  
- ### Requirements  
+ #### Requirements  
  Easy to set up and use. Should be possible without further technical knowledge.
  
  Add movies by uploading them to a local server through a web browser. The server will handle adding it to the library as well as downloading all metadata.
@@ -78,9 +78,9 @@
  Description of how to set up a React app with Django as a backend. Follow step 4 to set up with a static server. https://stackoverflow.com/questions/53708640/how-to-configure-django-with-webpack-react-using-create-react-app-on-ubuntu-serv
  
  
- ## Server side parts  
+ ### Server side parts  
  
- ### Adding files [client side]  
+ #### Adding files [client side]  
  The process of uploading movie files to the server can be a tedious task, when having hundreds or even thousands of movies in your collection. However, uploading each file through the web browser is chosen as the primary way of adding movies to the server for the following reasons:
  
  
@@ -103,7 +103,7 @@
  After selecting movie id, request sent to server to search for already uploaded instances of the movie. If it exists, the user is given the opportunity to either overwrite existing upload, upload another version so the movie has multiple files, or cancel the upload.
  
  
- ### Resumable upload  
+ #### Resumable upload  
  Ensures reliable upload of large files. Since movie files can be of a big size (many GBs), it is important to have an upload system that can handle interruptions that may occur during the upload process. Following is a description of the implementation used to handle uploading of files to the server. The server takes care of adding the files to the correct location in the library after upload.
  
  The upload process is divided into the following steps, each with a specialized request.
@@ -129,13 +129,13 @@
  ..But when the imdb-id for the selected file is confirmed by the user, the user will be shown already uploaded versions of the movie (if any), so that the user can choose to either upload another version, replace a current version, or cancel the upload.
  
  
- ### Movapi (movie metadata API)  
+ #### Movapi (movie metadata API)  
  API to retrieve movie metadata. Scrape IMDb
  
  Extended functionality to retrieve from rottentomatoes and downloading movie trailers etc
  
  
- ### Server monitor  
+ #### Server monitor  
  Provides statistics such as storage information etc. warning when server starts to fill up.
  
  Monitor how many bytes of data sent and data received. (Django middleware for this?)
@@ -175,7 +175,7 @@
  [imdb id]
  
  
- ### Database models  
+ #### Database models  
  Movie table
  
  Metadata about movies, retrieved from IMDb and other sources
@@ -201,19 +201,19 @@
  Personalized user settings stored in this table. User id as reference. Can be personalized theme, or any other personal attribute related to how the site should behave for a certain user
  
  
- ## Front end  
+ ### Front end  
  
- ### Initial registration and setup  
+ #### Initial registration and setup  
  The user has the option to either log in or create a new user account. After creating the account and logging in, the user is asked to select an existing movie library or create a new one. Creating a new one, the user needs to specify a location for the library. A default location is shown. Adding an existing library (using URL), the user must have user access to the library (from another user). If the movie library is empty, the user is taken directly to the upload page.
  
  The main page is an “infinite scroll” of categories, collections and franchises. Each row is a carousel of movies.
  
  
- ### Categories  
+ #### Categories  
  List of categories to show when browsing movies. Categories with belonging movies stored in the categories db table.
  
  
- ### Franchises  
+ #### Franchises  
  List of movie franchises to show when browsing movies. Stored in the collections db table
  
  Top action/ adventure franchises here
@@ -221,17 +221,17 @@
  [https://geekologie.com/image.php?path=/2013/06/28/highest-grossing-movie-franchises-large.jpg](https://geekologie.com/image.php?path=/2013/06/28/highest-grossing-movie-franchises-large.jpg)
  
  
- ### Collections  
+ #### Collections  
  
- ### Genres  
+ #### Genres  
  
- ## Production setup/ build  
+ ### Production setup/ build  
  
- #### WSGI (Gunicorn)  
+ ##### WSGI (Gunicorn)  
  The default server provided through Django is only meant for development and should never be used in production. Instead a WSGI server is used to host the Django application. Django comes with wsgi.py that contains the python callable used by the WSGI server. There are several WSGI server options available. Gunicorn is used in this setup as it is a reliable server with an easy setup. Installation is available through pip. Gunicorn might be replaced by uWSGI at a later point as it tends to be faster and Nginx supports the uWSGI protocol natively.
  
  
- #### Web server (Nginx)  
+ ##### Web server (Nginx)  
  The web server is listening on port 80, and configured as a reverse proxy to forward incoming requests to the WSGI server, and sends the response from the Django application back to the client.
  
  Nginx installation and configuration for OSX (nginx_install.sh):
@@ -257,28 +257,28 @@
  TODO: Improve script to handle the case of already installed nginx, or another server such as apache already listening to port 80.
  
  
- ## Future ideas  
+ ### Future ideas  
  
- ### React native for appleTV   
+ #### React native for appleTV   
  Compile to an iOS app to run the front end as an Apple TV app. May also compile to android (run directly on smart tv?) or mobile apps. This opens up the possibility of not having to use a web browser to access the front end, and ideally Apple TV’s remote can be used to browse the front end app.
  
  
- ### Centralized hosting for user data  
+ #### Centralized hosting for user data  
  Having a public site for users to register and holds all accounts. Then users register their local movie servers. Makes it possible to link several users to the same movie server.
  
  When installing a movie server, the user prompts a token linked to the user. It will show up in the users browser and now possible to interact with the server. Multiple users may have access to one server, and one user may have access to multiple servers, providing a larger movie library by merging the content when accessed in the browser.
  
  
- ### Backup server(s)  
+ #### Backup server(s)  
  Having the ability to host multiple servers for backup purposes as well as choosing the closest server to stream from. The servers need to synchronize in order to always have the same state in terms of uploaded files. Look into rsync, to see if it can be used to synchronize the media library folder.
  
  
- ### Mac OS status bar  
+ #### Mac OS status bar  
  When the server is running as a daemon on the mac OSX, an icon is shown in the status bar to show notifications, settings etc. Look into Rums (Python package) or PyObjC to achieve this in python.
  
  
- ### Docker to serve Nginx, WSGI and Django inside container  
+ #### Docker to serve Nginx, WSGI and Django inside container  
  [https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/](https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/)
  
  
- ### Nginx HTTPS (OpenSSL etc..) 
+ #### Nginx HTTPS (OpenSSL etc..) 
