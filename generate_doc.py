@@ -38,7 +38,7 @@ def generateTableOfContent(p):
                     toc_line = ""
                     tmp_line = line.replace('#', '').strip()
                     t = '\t'
-                    b = '* '
+                    b = ' - '
 
 
                     for i in range(1, headingType):
@@ -46,7 +46,7 @@ def generateTableOfContent(p):
 
                     toc_line += b
                     toc_line += ('[' + tmp_line + ']')
-                    toc_line += ('(' + tmp_line.replace(' ', '-').lower() + ')')
+                    toc_line += ('(#' + tmp_line.replace(' ', '-').lower() + ')')
                     # print(toc_line)
                     toc_line += '\n'
                     toc.append(toc_line)
