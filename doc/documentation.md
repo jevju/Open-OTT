@@ -26,7 +26,7 @@ Conversion notes:
 
 
 - [Open OTT Streaming Service](#open-ott-streaming-service)
-  - [Introduction  {#introduction}](#introduction--introduction)
+  - [Introduction](#introduction)
     - [Requirements {#requirements}](#requirements-requirements)
   - [Server side parts {#server-side-parts}](#server-side-parts-server-side-parts)
     - [Adding files \[client side\] {#adding-files-\[client-side\]}](#adding-files-client-side-adding-files-client-side)
