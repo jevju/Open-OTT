@@ -25,32 +25,8 @@
  ## Open OTT Streaming Service
  
  - [Open OTT Streaming Service](#open-ott-streaming-service)
-  * [Introduction  {#introduction}](#introduction----introduction-)
-    + [Requirements {#requirements}](#requirements---requirements-)
-  * [Server side parts {#server-side-parts}](#server-side-parts---server-side-parts-)
-    + [Adding files [client side] {#adding-files-[client-side]}](#adding-files--client-side----adding-files--client-side--)
-    + [Resumable upload {#resumable-upload}](#resumable-upload---resumable-upload-)
-    + [Movapi (movie metadata API) {#movapi-movie-metadata-api}](#movapi--movie-metadata-api----movapi-movie-metadata-api-)
-    + [Server monitor {#server-monitor}](#server-monitor---server-monitor-)
-    + [Database models {#database-models}](#database-models---database-models-)
-  * [Front end {#front-end}](#front-end---front-end-)
-    + [Initial registration and setup {#initial-registration-and-setup}](#initial-registration-and-setup---initial-registration-and-setup-)
-    + [Categories {#categories}](#categories---categories-)
-    + [Franchises {#franchises}](#franchises---franchises-)
-    + [Collections {#collections}](#collections---collections-)
-    + [Genres {#genres}](#genres---genres-)
-  * [Production setup/ build {#production-setup-build}](#production-setup--build---production-setup-build-)
-      - [WSGI (Gunicorn) {#wsgi-gunicorn}](#wsgi--gunicorn----wsgi-gunicorn-)
-      - [Web server (Nginx) {#web-server-nginx}](#web-server--nginx----web-server-nginx-)
-  * [Future ideas {#future-ideas}](#future-ideas---future-ideas-)
-    + [React native for appleTV  {#react-native-for-appletv}](#react-native-for-appletv----react-native-for-appletv-)
-    + [Centralized hosting for user data {#centralized-hosting-for-user-data}](#centralized-hosting-for-user-data---centralized-hosting-for-user-data-)
-    + [Backup server(s) {#backup-server-s}](#backup-server-s----backup-server-s-)
-    + [Mac OS status bar {#mac-os-status-bar}](#mac-os-status-bar---mac-os-status-bar-)
-    + [Docker to serve Nginx, WSGI and Django inside container {#docker-to-serve-nginx-wsgi-and-django-inside-container}](#docker-to-serve-nginx--wsgi-and-django-inside-container---docker-to-serve-nginx-wsgi-and-django-inside-container-)
-    + [Nginx HTTPS (OpenSSL etc..) {#nginx-https-openssl-etc}](#nginx-https--openssl-etc----nginx-https-openssl-etc-)
-
- 
+  * [Introduction](#introduction)
+    
  
  ### Introduction   
  The goal is to make an open source on demand service by hosting a movie server and access the content through a web browser. Both administration of the movie library, and watching. This documentation is primarily meant as a reference guide while developing, addressing new ideas and problems and reflecting solutions, but may also be useful for whoever wants to gain a technical insight to the solutions and implementation of the system.
