@@ -8,8 +8,8 @@ def movapi(request):
     print('movapi here')
 
 
-    if 'imdbid' in request.GET:
-        j = Movie.imdb_id(request.GET['imdbid'])
+    if 'id' in request.GET:
+        j = Movie.imdb_id(request.GET['id'])
 
         if not j:
             return JsonResponse({'status': 'imdb id not valid'}, status=400)

@@ -6,7 +6,7 @@ import UploadFiles from './UploadFiles';
 
 function App() {
   return (
-    <UploadFiles/>
+    <UploadFiles target='/library'/>
   );
 }
 

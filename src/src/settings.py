@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -133,8 +133,8 @@ STATIC_URL = '/static/'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024*1024*25 #Can set this to None to ignore check
 
-MEDIA_ROOT = './media'
-UPLOAD_TEMP_LOCATION = './media/tmp/'
+# MEDIA_ROOT = '/Users/user/Movies/library' #Absolute path to media library
+UPLOAD_TEMP_LOCATION = '/tmp/'
 UPLOAD_ACCEPTED_FILETYPES = [
     'mp4',
     'm4v'

@@ -68,7 +68,7 @@ export default class UploadElement extends React.Component {
 
             query = this.prepareInit();
             console.log("sending init packet")
-            fetch(this.props.target + query)
+            fetch(this.props.target + '/upload' + query)
             .then(res => {
 
                 if(res.ok){
@@ -110,7 +110,7 @@ export default class UploadElement extends React.Component {
 
             var t1 = new Date().getTime();
 
-            fetch(this.props.target + query, {method: 'POST', body: chunk})
+            fetch(this.props.target + '/upload/' + query, {method: 'POST', body: chunk})
             .then(res => {
                 if(res.ok){
                     return res.json();
@@ -141,7 +141,7 @@ export default class UploadElement extends React.Component {
             query = this.prepareEnd();
             console.log('Sending end packet');
 
-            fetch(this.props.target + query)
+            fetch(this.props.target + '/upload' + query)
             .then(res => {
                 if(res.ok){
                     return res.json()
@@ -209,7 +209,7 @@ export default class UploadElement extends React.Component {
         if(!this.props.file){
             return;
         }
-        console.log(this.props.file);
+
         return <div>{this.props.file.name}</div>
     }
 

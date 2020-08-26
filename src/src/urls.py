@@ -20,8 +20,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('upload/', include('upload.urls')),
-    path('api/movapi/', include('movapi.urls')),
+    path('library/', include('library.urls')),
+    path('api/metadata/', include('metadata.urls')),
     path('', TemplateView.as_view(template_name='index.html')),
 ]
 

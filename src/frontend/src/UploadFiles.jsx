@@ -8,39 +8,65 @@ export default class UploadFiles extends React.Component {
         super();
 
         this.state = {
-            selectedFiles: []
+            selectedFiles: [],
+
         }
     }
 
 
+    handleExists(files){
+        var tempSelected = this.state.selectedFiles;
+        for (var i = 0; i < files.length; i++){
+            for (var j = 0; j < tempSelected.length; j++){
+                if (files[i].name === tempSelected[j].file.name){
 
+                    tempSelected[j].file.exists = files[i].exists;
+                }
+            }
+        }
 
-    fileIsUploaded(f){
+        this.setState({selectedFiles: tempSelected});
+    }
 
+    // Check if the file is already uploaded to the server
+    isFileUploaded(files){
 
+        var body = [];
+        for(var i = 0; i < files.length; i++){
+            var file = {
+                "size": files[i].file.size,
+                "name": files[i].file.name,
+                "lastModified": files[i].file.lastModified
+            }
+            body.push(file);
+        }
 
+        fetch(this.props.target + '/exists/', {method: 'POST', body: JSON.stringify(body)})
+        .then(res => {
 
-        var query = '?';
-        query += 'type=exists';
-        query += '&size=' + String(this.props.file.size);
-        query += '&name=' + this.props.file.name;
-        query += '&lastModified=' + this.props.file.lastModified;
-
-
-
-
-
-
-
+            if(res.ok){
+                return res.json()
+            } else{
+                this.setState({failed: true});
+                throw new Error('Exists request not accepted');
+            }
+        })
+        .then(data => {
+            this.handleExists(data);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 
         return false;
-
     }
 
 
 
 
     handleFileSelection = (f) => {
+
+
 
         var newSelectedFiles = this.state.selectedFiles;
 
@@ -50,13 +76,20 @@ export default class UploadFiles extends React.Component {
             for(var i = 0; i < f.target.files.length; i++){
                 for(var j = 0; j < newSelectedFiles.length; j++){
                     if(newSelectedFiles[j].name === f.target.files[i].name){
-                        console.log('contains');
                         continue loop1;
                     }
                 }
-                newSelectedFiles.push(f.target.files[i]);
+
+                var newFile = {};
+                newFile.file = f.target.files[i];
+                newFile.visible = false;
+                // newFile.exists = true;
+                // this.isFileUploaded(newFile);
+
+                newSelectedFiles.push(newFile);
             }
 
+        this.isFileUploaded(newSelectedFiles);
         this.setState({selectedFiles: newSelectedFiles});
     };
 
@@ -83,10 +116,21 @@ export default class UploadFiles extends React.Component {
         var files = [];
         for(var i = 0; i < this.state.selectedFiles.length; i++){
             const j = i;
+
+            // Not yet determined if file exists
+            if(this.state.selectedFiles[i].file.exists == null){
+                continue;
+            }
+
+            // File exists on server
+            if(this.state.selectedFiles[i].file.exists){
+                continue;
+            }
+
             files.push(<UploadElement
                 key={j}
                 file={this.state.selectedFiles[i]}
-                target='/upload/'
+                target={this.props.target}
             />);
         }
 

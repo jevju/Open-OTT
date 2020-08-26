@@ -1,12 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
 from django.conf import settings
+from django.http import JsonResponse
 
 import json
 import shutil
 import os
+
+from pathlib import Path
+
 
 ERROR_MSG = {'status':'error'}
 
@@ -17,11 +17,36 @@ def tmpRoot():
         tmp_root = settings.UPLOAD_TEMP_LOCATION
     return tmp_root
 
-def mediaRoot():
-    media_root = '/tmp' #TODO: make a proper media default library location. for instance make an own partition
+def getMediaRoot():
+    media_root = os.path.join(str(Path.home()), 'Movies', 'library')
     if settings.MEDIA_ROOT:
         media_root = settings.MEDIA_ROOT
+
     return media_root
+
+# Prepare the upload.
+# Check if any instances of the given movie id is already uploaded
+def handlePrepare(request):
+    size, name, lastModified = None, None, None
+    if 'size' in request.GET:
+        size = request.GET['size']
+    if 'name' in request.GET:
+        name = request.GET['name']
+    if 'lastModified' in request.GET:
+        lastModified = request.GET['lastModified']
+
+    if not name or not size or not lastModified:
+        return JsonResponse(ERROR_MSG, status=400)
+
+    id = None
+    if 'id' in request.GET:
+        id = request.GET['id']
+
+    if not id:
+        return JsonResponse(ERROR_MSG, status=400)
+
+    # TODO: If id already in library database table,
+    # return list of uploaded files having the given movie id
 
 
 def handleInit(request):
@@ -36,6 +61,9 @@ def handleInit(request):
 
     if not name or not size or not lastModified:
         return JsonResponse(ERROR_MSG, status=400)
+
+
+
 
     filetype = name.split('.')[-1]
     if not filetype in settings.UPLOAD_ACCEPTED_FILETYPES:
@@ -117,7 +145,8 @@ def handleEnd(request):
         print(3)
         return JsonResponse(ERROR_MSG, status=400)
 
-    dst = os.path.join(mediaRoot(), 'library', j['name'])
+    dst = os.path.join(getMediaRoot(), j['name'])
+
 
     print('mv to ' + dst)
     # Make sure the library exists, then move the uploaded file to the library
@@ -131,20 +160,3 @@ def handleEnd(request):
     print('clianing ip')
 
     return JsonResponse({'status': 'sucess'})
-
-
-@csrf_exempt
-def upload(request):
-
-
-    if 'type' in request.GET:
-        if request.GET['type'] == 'init':
-            return handleInit(request)
-
-        elif request.GET['type'] == 'chunk':
-            return handleChunk(request)
-
-        elif request.GET['type'] == 'end':
-            return handleEnd(request)
-
-    return JsonResponse(ERROR_MSG, status=400)
