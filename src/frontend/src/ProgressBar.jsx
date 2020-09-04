@@ -14,7 +14,7 @@ export default class ProgressBar extends React.Component{
 
 
         var style = {
-            backgroundColor: 'green',
+            backgroundColor: 'gray',
             width: this.props.progress + '%',
             height: '100%'
         }

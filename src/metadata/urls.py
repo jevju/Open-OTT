@@ -3,5 +3,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.movapi, name='movapi'),
+    path('movie/', views.movie, name='movie'),
 ]

@@ -15,7 +15,7 @@ class Movie():
         RT = False
 
         movie = {
-            'imdbID':       None,
+            'id':       None,
             'title':        None,
             'year':         None,
             'stars':        None,
@@ -33,7 +33,7 @@ class Movie():
             'poster_url':   None,
             'parental_rating': None,
             'metascore':    None,
-            'more_like_this':  None,
+            'suggestions':  None,
             'tagline':      None,
             'wikidata_id':  None,
             'rotten_tomatoes': {},
@@ -54,7 +54,7 @@ class Movie():
 
             soup = Movie.__create_soup(url)
 
-            movie['imdbID'] = Movie.imdbID(soup)
+            movie['id'] = Movie.id(soup)
             movie['title'] = Movie.title(soup)
             movie['year'] = Movie.year(soup)
             movie['stars'] = Movie.stars(soup)
@@ -75,7 +75,7 @@ class Movie():
             movie['details'] = Movie.details(soup)
 
             # Movie.trailer()
-            movie['more_like_this'] = Movie.more_like_this(soup)
+            movie['suggestions'] = Movie.suggestions(soup)
             movie['tagline'] = Movie.tagline(soup)
 
             # if nor:
@@ -99,7 +99,7 @@ class Movie():
             return None
 
     @staticmethod
-    def search_title(title, count=10):
+    def search(title, count=10):
         pattern = re.compile(r'[t]{2}[0-9]{7,8}')
 
         if pattern.search(title):
@@ -108,7 +108,7 @@ class Movie():
 
         result = []
 	# print(title)
-        print(title)
+
         try:
             url = 'https://www.imdb.com/find?q=' + title + '&s=tt'
             # if full:
@@ -128,7 +128,7 @@ class Movie():
                         movie = {}
                         if i > count:
                             break
-                        movie['imdbID'] = m.find_all('td', class_='result_text')[0].find('a')['href'].split('/title/')[1].split('/')[0]
+                        movie['id'] = m.find_all('td', class_='result_text')[0].find('a')['href'].split('/title/')[1].split('/')[0]
                         # print(movie)
                         movie['poster_url'] = m.find_all('img')[0]['src']
                         movie['title'] = m.find_all('td', class_='result_text')[0].find('a').text
@@ -141,7 +141,8 @@ class Movie():
 
                         result.append(movie)
 
-            return {'titles':result}
+            return result
+            # return {'titles':result}
 
         except Exception as e:
 	        print(e)
@@ -178,7 +179,7 @@ class Movie():
         return soup
 
     @staticmethod
-    def imdbID(soup):
+    def id(soup):
         try:
             item = str(soup.find(property = 'pageId'))
             sep = '" property'
@@ -506,7 +507,7 @@ class Movie():
         # print(temp[0].get('src'))
 
     @staticmethod
-    def more_like_this(soup):
+    def suggestions(soup):
         try:
             temp = soup.findAll("div", {'class', 'rec_item'})
             ids = []
@@ -514,7 +515,7 @@ class Movie():
                 ids.append(i.attrs['data-tconst'])
             return ids
         except:
-            # self.error.append('more_like_this')
+            # self.error.append('suggestions')
             return None
 
     @staticmethod

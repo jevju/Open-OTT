@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .uploader import handlePrepare, handleInit, handleChunk, handleEnd
+from .uploader import handlePrepare, handleInit, handleChunk, handleEnd, handleFileExists, handleIdExists
 import json
 # Views for managing the movie library. Used to upload, delete and stream movies
 
@@ -10,34 +10,16 @@ import json
 # Given the filename, size and lastModified timestamp, check if a given file is uploaded
 # Supports bulk checking by receiving a list of file objects
 def exists(request):
-    print('exists')
 
-    # size, name, lastModified = None, None, None
-    # if 'size' in request.GET:
-    #     size = request.GET['size']
-    # if 'name' in request.GET:
-    #     name = request.GET['name']
-    # if 'lastModified' in request.GET:
-    #     lastModified = request.GET['lastModified']
-    #
-    # if not name or not size or not lastModified:
-    #     return HttpResponse(status=400)
+    if 'files' in request.GET:
+        return handleFileExists(request)
 
-    files = None
-    if len(request.body) > 0:
-        files = json.loads(request.body)
+    if 'id' in request.GET:
+        return handleIdExists(request)
 
-    if not files:
-        return HttpResponse(status=400)
+    return HttpResponse(status=400)
 
 
-    for f in files:
-        f['exists'] = False
-
-    return JsonResponse(files, safe=False)
-
-    # For now, return "don't exists"
-    # return
 
 # get movie id, return list of files in library for that movie id
 

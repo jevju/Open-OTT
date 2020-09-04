@@ -1,3 +1,26 @@
 from django.db import models
 
-# Create your models here.
+class MovieMetadata(models.Model):
+    id = models.CharField(max_length=9, primary_key=True)
+    title = models.CharField(default=None, null=True, max_length=200)
+    year = models.CharField(default=None, null=True, max_length=4)
+    stars = models.JSONField(default=None, null=True)
+    cast = models.JSONField(default=None, null=True)
+    directors = models.JSONField(default=None, null=True)
+    writers = models.JSONField(default=None, null=True)
+    genres = models.JSONField(default=None, null=True)
+    duration = models.JSONField(default=None, null=True)
+    plot_short = models.CharField(default=None, null=True, max_length=1000)
+    plot_long = models.CharField(default=None, null=True, max_length=5000)
+    rating = models.JSONField(default=None, null=True)
+    poster_url = models.URLField(default=None, null=True)
+    parental_rating = models.CharField(default=None, null=True, max_length=20)
+    metascore = models.CharField(default=None, null=True, max_length=20)
+    suggestions = models.JSONField(default=None, null=True)
+    tagline = models.CharField(default=None, null=True, max_length=100)
+    wikidata_id = models.CharField(default=None, null=True, max_length=20)
+    rotten_tomatoes = models.JSONField(default=None, null=True)
+    metacritic_url = models.URLField(default=None, null=True)
+    metacritic_rating = models.CharField(default=None, null=True, max_length=1000)
+    details = models.JSONField(default=None, null=True)
+    awards = models.JSONField(default=None, null=True)

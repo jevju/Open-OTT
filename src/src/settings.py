@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'library',
+    'metadata'
 ]
 
 MIDDLEWARE = [
@@ -133,8 +135,8 @@ STATIC_URL = '/static/'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024*1024*25 #Can set this to None to ignore check
 
-# MEDIA_ROOT = '/Users/user/Movies/library' #Absolute path to media library
-UPLOAD_TEMP_LOCATION = '/tmp/'
+MEDIA_ROOT = os.path.join(str(Path.home()), 'OOTT', 'library') #Absolute path to media library
+TEMP_ROOT = '/tmp/'
 UPLOAD_ACCEPTED_FILETYPES = [
     'mp4',
     'm4v'
