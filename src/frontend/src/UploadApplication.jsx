@@ -1,6 +1,7 @@
 import React from 'react';
 
 import UploadFiles from './UploadFiles';
+import Upload from './Upload';
 
 export default class UploadApplication extends React.Component{
 
@@ -10,7 +11,7 @@ export default class UploadApplication extends React.Component{
         return (
 
             <div className={'upload-application'}>
-                <UploadFiles target='/library'/>
+                <Upload/>
             </div>
         )
     }

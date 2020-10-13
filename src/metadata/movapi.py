@@ -12,7 +12,7 @@ class Movie():
     def imdb_id(movid):
 
         # self.movid = movid
-        RT = False
+        RT = True
 
         movie = {
             'id':       None,
@@ -86,10 +86,10 @@ class Movie():
             if RT:
 
                     # print(self.wiki_soup)
-                Movie.wikidata(movid)
+                Movie.wikidata(movid, movie)
                     # self.rotten_tomatoes_url()
-                Movie.rotten_tomatoes_rating(movid)
-                Movie.metacritic(movid)
+                Movie.rotten_tomatoes_rating(movie)
+                Movie.metacritic(movie)
 
             # self.print_error_msg()
             return movie
@@ -167,7 +167,7 @@ class Movie():
     def __create_soup(url, nor = False):
         request = requests.get(url, headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko/20100101 Firefox/68.0",
-            "Accept-Language": "en-US, en;q=0.5"
+            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8"
         })
 
         if nor:
@@ -602,12 +602,14 @@ class Movie():
             return None
 
     @staticmethod
-    def wikidata(self):
+    def wikidata(movid, imdb_obj):
+        print('wikidata')
         try:
-            url = "https://www.wikidata.org/w/index.php?search=" + self.movid
-            soup = self.__create_soup(url)
+            url = "https://www.wikidata.org/w/index.php?search=" + movid
+            soup = Movie.__create_soup(url)
 
             temp = soup.findAll('ul', {'class', 'mw-search-results'})
+
             for li in temp:
                 t = li.findAll('div', {'class', 'mw-search-result-heading'})
                 mov = t[0].find('a')
@@ -620,31 +622,34 @@ class Movie():
                 # .replace('\u200e', '')
                 # tit = tit.replace('\u200e', '')
 
-                if (self.movie['year'] == year):
-                    self.movie['wikidata_id'] = wikidata_id
+                if (imdb_obj['year'] == year):
+                    imdb_obj['wikidata_id'] = wikidata_id
 
-                    url = 'https://www.wikidata.org/wiki/' + self.movie['wikidata_id']
+                    url = 'https://www.wikidata.org/wiki/' + imdb_obj['wikidata_id']
 
-                    soup = self.__create_soup(url)
+                    soup = Movie.__create_soup(url)
 
                     try:
                         temp = soup.find('div', {'id': 'P1258'})
                         rotten_tomatoes_url = temp.find('a', {'class':'wb-external-id external'}).get('href')
-                        self.movie['rotten_tomatoes']['url'] = rotten_tomatoes_url
-                    except:
-                        self.error.append('rotten_tomatoes')
+                        imdb_obj['rotten_tomatoes']['url'] = rotten_tomatoes_url
+                    except Exception as e:
+                        print(e)
+                        imdb_obj['rotten_tomatoes']['url'] = None
 
                     try:
                         temp = soup.find('div', {'id': 'P1712'})
                         metacritic_url = temp.find('a', {'class':'wb-external-id external'}).get('href')
-                        self.movie['metacritic_url'] = metacritic_url
-                    except:
-                        self.error.append('metacritic')
+                        imdb_obj['metacritic_url'] = metacritic_url
+                    except Exception as e:
+                        print(e)
+                        imdb_obj['metacritic_url'] = None
 
                 else:
-                    self.error.append('wikidata')
-        except:
-            self.error.append('wikidata')
+                    pass
+        except Exception as e:
+            print(e)
+            imdb_obj['wikidata_id'] = None
 
     # def rotten_tomatoes_url(self):
     #     try:
@@ -660,11 +665,11 @@ class Movie():
     #         self.error.append('rotten_tomatoes_url')
 
     @staticmethod
-    def rotten_tomatoes_rating(self):
+    def rotten_tomatoes_rating(movie):
         try:
-            url = self.movie['rotten_tomatoes']['url']
+            url = movie['rotten_tomatoes']['url']
 
-            soup = self.__create_soup(url)
+            soup = Movie.__create_soup(url)
 
             rating = {}
             tomatometer = {}
@@ -688,24 +693,30 @@ class Movie():
 
             rating['audience'] = audience
             rating['tomatometer'] = tomatometer
-            self.movie['rotten_tomatoes']['rating'] = rating
+            movie['rotten_tomatoes']['rating'] = rating
 
-        except:
-            self.error.append('rotten_tomatoes_rating')
+        except Exception as e:
+            print(e)
+            movie['rotten_tomatoes']['rating'] = None
 
     @staticmethod
-    def metacritic(self):
+    def metacritic(movie):
         try:
-            url = self.movie['metacritic_url']
+            url = movie['metacritic_url']
             # print(url)
-            soup = self.__create_soup(url)
+            soup = Movie.__create_soup(url)
 
             r = soup.find('div', {'id':'videoContainer_wrapper'})
             trailer_url = r.get('data-mcvideourl')
 
-            self.movie['trailer_url'] = trailer_url
-        except:
-            self.error.append('trailer_url')
+            # if movie['details']:
+            #     movie['details']['trailer_url'] = trailer_url
+            # else:
+            #     movie['details'] = {'trailer_url': trailer_url}
+
+        except Exception as e:
+            print(e)
+            # movie['trailer_url'] = None
 
         try:
             metacritic_rating = {}
@@ -719,7 +730,8 @@ class Movie():
             # print(user_score.getText())
             metacritic_rating['user_score'] = user_score.getText()
 
-            self.movie['metacritic_rating'] = metacritic_rating
+            movie['metacritic_rating'] = metacritic_rating
 
-        except:
-            self.error.append('metacritic_rating')
+        except Exception as e:
+            print(e)
+            movie['metacritic_rating'] = None

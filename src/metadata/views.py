@@ -6,19 +6,19 @@ from metadata.models import MovieMetadata
 from .movapi import Movie
 
 def movie(request):
-
-
-
     if 'search' in request.GET:
         q = request.GET['search']
 
         res = Movie.search(q)
 
+        print(type(res))
+        if type(res) == type({}):
+            res = [res]
+        print(type(res))
         return JsonResponse(res, safe=False)
 
 
     elif 'id' in request.GET:
-
         i = request.GET['id']
 
         try:
@@ -30,7 +30,6 @@ def movie(request):
 
         # for key, val in res:
         #     print(key, val)
-
 
 
         # return JsonResponse(res, safe=False)
