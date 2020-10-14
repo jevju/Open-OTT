@@ -107,7 +107,10 @@ class Movie():
             return Movie.imdb_id(pattern.search(title).group())
 
         result = []
-	# print(title)
+
+        title = re.sub('[^a-zA-Z0-9 \n\.]', '', title)
+
+        print(title)
 
         try:
             url = 'https://www.imdb.com/find?q=' + title + '&s=tt'
@@ -117,7 +120,7 @@ class Movie():
             soup = Movie.__create_soup(url)
 
             sections = soup.find_all('div', class_='findSection')
-
+            print(sections)
             for section in sections:
                 s = section.find_all('h3', class_='findSectionHeader')[0].text
                 # print(s)
@@ -141,6 +144,7 @@ class Movie():
 
                         result.append(movie)
 
+            print(result)
             return result
             # return {'titles':result}
 
