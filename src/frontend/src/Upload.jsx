@@ -1,5 +1,6 @@
 import React from 'react';
 
+import SuggestionCell from './SuggestionCell';
 
 export default class Upload extends React.Component {
     constructor(props){
@@ -19,6 +20,7 @@ export default class Upload extends React.Component {
         this.max_file_selections = 2;
 
         this.onSelect = this.onSelect.bind(this);
+        this.onSuggestionChange = this.onSuggestionChange.bind(this);
         this.onUpload = this.onUpload.bind(this);
         this.onDelete = this.onDelete.bind(this);
     }
@@ -358,6 +360,16 @@ export default class Upload extends React.Component {
         }
     }
 
+    onSuggestionChange(idx, suggestedIdx){
+        console.log('in chanignig');
+
+        var temp = this.state.files;
+        temp[idx].suggestedIdx = suggestedIdx;
+        temp[idx]['showSuggestions'] = false;
+        this.setState({files: temp});
+
+    }
+
     onUpload(idx){
 
         // Add to uploads
@@ -408,9 +420,56 @@ export default class Upload extends React.Component {
         })
     }
 
+
     renderInit(){
         return(
             <div>Initing {this.state.initQue.length} files</div>
+        )
+    }
+
+    renderSuggestions(idx){
+
+        if(!('showSuggestions' in this.state.files[idx])){
+            return null;
+        }
+
+        if(!this.state.files[idx].showSuggestions){
+            return null;
+        }
+
+        if(!('suggestions' in this.state.files[idx])){
+            return null;
+        }
+
+
+
+        // if(this.state.files[idx].suggestions.length )
+
+        console.log('suggest for ', idx);
+        var s = [];
+
+        for(var i = 0; i < this.state.files[idx].suggestions.length; i++){
+            const k = i;
+            if(i === this.state.files[idx].suggestedIdx){
+                continue;
+            }
+            s.push(
+                <div key={k} id={k} style={{cursor:'pointer'}} onClick={() => this.onSuggestionChange(idx, k)}>
+                    <SuggestionCell
+                        title={this.state.files[idx].suggestions[k].title}
+                        year={this.state.files[idx].suggestions[k].year}
+                        imgUrl={this.state.files[idx].suggestions[k].poster_url}
+                    />
+                </div>
+            )
+
+        }
+
+        return (
+            <div>
+                <div>SearchBar</div>
+                {s}
+            </div>
         )
     }
 
@@ -420,14 +479,36 @@ export default class Upload extends React.Component {
             const idx = this.state.selectedQue[i];
 
             var item = (
-                <div>
-                    {this.state.files[idx].name}
-                    {this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].year}
-                    <button onClick = {() => {
-                        this.onUpload(idx);
-                    }}
-                    >Upload
-                    </button>
+                <div
+                    style={{border: '1px solid black', position: 'relative', overflow: 'auto'}}
+                    >
+                    <div style={{width: '100%'}}>{this.state.files[idx].name}</div>
+                    <div style={{border: '1px solid black', cursor:'pointer'}}onClick = {() => {
+                        var temp = this.state.files;
+                        temp[idx]['showSuggestions'] = !temp[idx]['showSuggestions'];
+                        this.setState({files: temp});
+                    }}>
+                        <img style={{float:'left'}} src={this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].poster_url}/>
+                        <div style={{float: 'left'}}>
+                            <div style={{}}>
+                            {this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].title}
+                            </div>
+                            <div>
+                            ({this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].year})
+                            </div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <button onClick = {() => {
+                            this.onUpload(idx);
+                        }}
+                        >Upload
+                        </button>
+                    </div>
+
+
+                    {this.renderSuggestions(idx)}
                 </div>
             )
 

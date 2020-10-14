@@ -1,9 +1,10 @@
 from django.conf import settings
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, StreamingHttpResponse
 from django.test import Client
 
 from .models import Library
 from .tools import media_root
+from .streamer import stream_video
 
 import json
 import shutil
@@ -15,6 +16,7 @@ import urllib
 
 from pathlib import Path
 from bs4 import BeautifulSoup
+from PIL import Image
 
 ERROR_MSG = {'status':'error'}
 
@@ -82,6 +84,69 @@ def getTrailerUrl(metacritic_url):
         return r.get('data-mcvideourl')
     except:
         return None
+
+def handlePoster(content_id, w, h):
+
+    if not validateContentId(content_id):
+        return HttpResponse(status=404)
+
+    try:
+        obj = Library.objects.get(content_id=content_id)
+
+    except Library.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if not obj.poster:
+        return HttpResponse(status=404)
+
+    try:
+        r = 1.473
+
+        if w and not h:
+            h = int(w * r)
+
+        if h and not w:
+            w = int(h/ r)
+
+        if w and h:
+            img = Image.open(obj.poster)
+            img.thumbnail((w,h))
+            response = HttpResponse(content_type='image/jpeg')
+            img.save(response, 'jpeg')
+            return response
+
+        else:
+            with open(obj.poster, 'rb') as f:
+                return HttpResponse(f.read(), content_type='image/jpeg')
+    except:
+        return HttpResponse(status=404)
+
+# Retrieve movie preview/ trailer
+def handlePreview(request, content_id):
+
+    if not validateContentId(content_id):
+        return HttpResponse(status=404)
+
+    try:
+        obj = Library.objects.get(content_id=content_id)
+
+    except Library.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if not obj.trailer:
+        return HttpResponse(status=404)
+
+    try:
+
+        return stream_video(request, obj.trailer)
+
+        # with open(obj.trailer, 'rb') as f:
+        #     return StreamingHttpResponse(f.read(), content_type='video/mp4')
+
+    except Exception as e:
+        print(e)
+        return HttpResponse(status=404)
+
 
 
 def handleComplete(request):
