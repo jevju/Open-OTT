@@ -17,3 +17,9 @@ class Library(models.Model):
     type = models.CharField(max_length=200, default=None, null=True) # Specify type (Video, image, srt etc)
     hash = models.CharField(max_length=100, unique=True) # File ID
     addedOn = models.DateTimeField(auto_now_add=True)
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=200, blank=False, default=None)
+    content = models.JSONField(default=None, null=True)
+    type = models.CharField(max_length=20, blank=False, default=None)

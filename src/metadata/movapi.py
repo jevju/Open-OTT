@@ -22,7 +22,7 @@ class Movie():
             'cast':         None,
             # 'characters':   None,
             'directors':    None,
-            # 'production_company': None,
+            # 'company': None,
             'writers':      None,
             'genres':       None,
             'duration':     None,
@@ -60,7 +60,7 @@ class Movie():
             movie['stars'] = Movie.stars(soup)
             movie['cast'] = Movie.cast(soup)
             movie['directors'] = Movie.directors(soup)
-            # movie['production_company'] = Movie.production_company(soup)
+            movie['company'] = Movie.company(soup)
             movie['writers'] = Movie.writers(soup)
             movie['genres'] = Movie.genres(soup)
             movie['duration'] = Movie.duration(soup)
@@ -111,16 +111,19 @@ class Movie():
         title = re.sub('[^a-zA-Z0-9 \n\.]', '', title)
 
         print(title)
+        #
+        # title = title.replace(' ',  '+')
+        #
+        # print(title)
 
         try:
-            url = 'https://www.imdb.com/find?q=' + title + '&s=tt'
+            url = 'https://www.imdb.com/find?q=' + title + '&s=tt' + '&ttype=ft'
             # if full:
             #     url = url + '&s=tt'
 
             soup = Movie.__create_soup(url)
 
             sections = soup.find_all('div', class_='findSection')
-            print(sections)
             for section in sections:
                 s = section.find_all('h3', class_='findSectionHeader')[0].text
                 # print(s)
@@ -142,9 +145,16 @@ class Movie():
                         except:
                             movie['year'] = None
 
+                        # try:
+                        #     # type = m.find_all('td', class_='result_text')[0].text.split('(')[-1].replace(')', '')
+                        #     types = ['Video Game', 'TV Episode', 'in development', 'Video', 'Short']
+                        #     type = re.findall(r"[(]{1}[0-9]{4}[)]{1}", m.find_all('td', class_='result_text')[0].text)[0]
+                        #     movie['type'] = type
+                        # except:
+                        #     movie['type'] = None
+
                         result.append(movie)
 
-            print(result)
             return result
             # return {'titles':result}
 
@@ -334,7 +344,7 @@ class Movie():
             return None
 
     @staticmethod
-    def production_company(soup):
+    def company(soup):
         try:
             companies = []
             temp = soup.findAll('div', {'class', 'txt-block'})
@@ -342,10 +352,13 @@ class Movie():
                 h = str(t.find('h4'))
                 if 'Production C' in h:
                     a = t.findAll('a')
+                    print(a)
                     for i in a:
                         s = i.text.strip()
                         if 'See more' in s:
                             continue
+
+
                         companies.append(s)
             return companies
 
@@ -589,13 +602,13 @@ class Movie():
                 elif 'Production Co' in inline.text:
 
                     companies = t.findAll('a')
-                    details['production_company'] = []
+                    details['company'] = []
 
                     for co in companies:
                         s = co.text.strip()
                         if 'See more' in s:
                             continue
-                        details['production_company'].append(s)
+                        details['company'].append(s)
 
 
 

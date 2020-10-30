@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse, StreamingHttpResponse
+from django.db.models import F
 from django.test import Client
 
 from .models import Library
@@ -147,7 +148,49 @@ def handlePreview(request, content_id):
         print(e)
         return HttpResponse(status=404)
 
+def handleVideo(request, content_id):
+    if not validateContentId(content_id):
+        return HttpResponse(status=404)
 
+    try:
+        obj = Library.objects.get(content_id=content_id)
+
+    except Library.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if not obj.file:
+        return HttpResponse(status=404)
+
+    try:
+
+        return stream_video(request, obj.file)
+
+        # with open(obj.trailer, 'rb') as f:
+        #     return StreamingHttpResponse(f.read(), content_type='video/mp4')
+
+    except Exception as e:
+        print(e)
+        return HttpResponse(status=404)
+
+def handleTitle(filter, count):
+    print('retried titile')
+    # Retrieve all titles
+    if not filter:
+        try:
+            obj = Library.objects.all().filter(size__exact = F('size_uploaded')).values('content_id')
+            print(len(obj))
+
+
+        except Library.DoesNotExist:
+            return httpresponse(status=404)
+
+        res = []
+        for m in obj:
+            print(m['content_id'])
+            res.append(m['content_id'])
+
+        return JsonResponse({'titles': res})
+        return HttpResponse(status=200)
 
 def handleComplete(request):
     print('handle complete')
@@ -179,8 +222,10 @@ def handleComplete(request):
         if r.status_code == 200:
             m = r.json()
 
+
             # Download poster
             if 'poster_url' in m:
+                print('poster_url')
                 filetype = m['poster_url'].split('.')[-1]
                 d = os.path.dirname(obj.file)
                 file_name = os.path.join(d, obj.content_id + '.' + filetype)

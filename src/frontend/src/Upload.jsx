@@ -2,6 +2,7 @@ import React from 'react';
 
 import SuggestionCell from './SuggestionCell';
 
+
 export default class Upload extends React.Component {
     constructor(props){
         super();
@@ -54,44 +55,6 @@ export default class Upload extends React.Component {
             }
         }
 
-        // for(var iter = 0; iter < this.state.initQue.length; iter++){
-        //     const i = this.state.initQue[iter];
-        //
-        //     var obj = this.state.files[i];
-        //
-        //     if(!('server' in obj)){
-        //         this.getFileInfo(i);
-        //         continue;
-        //     }
-        //
-        //     if(obj.server.size_uploaded >= obj.server.size){
-        //         this.queAdd('exist', i);
-        //         this.queRemove('init', i);
-        //         continue;
-        //     }
-        //
-        //     if(!('suggestions' in obj)){
-        //         var term = obj.name;
-        //         if(term.includes('(')){
-        //             term = term.split('(', 1)[0];
-        //         }
-        //         if(term.includes('.')){
-        //             term = term.split('.', 1)[0];
-        //         }
-        //
-        //         this.getSuggestions(term, i);
-        //         continue;
-        //     }
-        //
-        //     if(this.max_file_selections >= this.state.selectedQue.length){
-        //         this.queAdd('selected', i);
-        //         this.queRemove('init', i);
-        //     } else{
-        //         break;
-        //     }
-        //
-        // }
-
         if((this.state.waitingQue.length > 0) && (this.state.uploadingQue.length < this.max_simultanous_uploads)){
             const idx = this.state.waitingQue[0];
             this.queAdd('uploading', idx);
@@ -122,7 +85,6 @@ export default class Upload extends React.Component {
             var files = this.state.files;
             files[idx]['server'] = data;
             this.setState({files: files});
-
         })
         .catch((err) => {
             var files = this.state.files;
@@ -132,6 +94,11 @@ export default class Upload extends React.Component {
     }
 
     getSuggestions(term, idx){
+
+        if(term.length < 1){
+            return;
+        }
+
         var query = '?search=' + term;
         fetch('/metadata/movie/' + query)
         .then(res => {
@@ -142,10 +109,19 @@ export default class Upload extends React.Component {
             }
         })
         .then(data => {
-            var temp = this.state.files;
-            temp[idx]['suggestions'] = data;
-            temp[idx]['suggestedIdx'] = 0;
-            this.setState({files: temp});
+            if(data.length > 0){
+                var temp = this.state.files;
+                temp[idx]['suggestions'] = data;
+                if(!temp[idx].suggestedIdx){
+                    temp[idx]['suggestedIdx'] = 0;
+                }
+                this.setState({files: temp});
+            } else{
+                var temp = this.state.files;
+                temp[idx]['suggestions'] = null;
+                temp[idx]['suggestedIdx'] = null;
+                this.setState({files: temp});
+            }
         })
         .catch((err) => {
             console.log(err);
@@ -248,6 +224,8 @@ export default class Upload extends React.Component {
             // Add to finished que on successful response
 
             // Processing...
+
+            console.log('complete now');
 
             const query = this.prepareComplete(idx);
 
@@ -427,6 +405,19 @@ export default class Upload extends React.Component {
         )
     }
 
+
+    renderSuggestionSearchBar(idx){
+
+
+        return (
+            <input onKeyUp={(e) => {
+                console.log(e.target.value, idx);
+                this.getSuggestions(e.target.value, idx);
+
+            }}></input>
+        )
+    }
+
     renderSuggestions(idx){
 
         if(!('showSuggestions' in this.state.files[idx])){
@@ -443,32 +434,38 @@ export default class Upload extends React.Component {
 
 
 
+        console.log(this.state.files);
+
+
         // if(this.state.files[idx].suggestions.length )
 
         console.log('suggest for ', idx);
         var s = [];
 
-        for(var i = 0; i < this.state.files[idx].suggestions.length; i++){
-            const k = i;
-            if(i === this.state.files[idx].suggestedIdx){
-                continue;
-            }
-            s.push(
-                <div key={k} id={k} style={{cursor:'pointer'}} onClick={() => this.onSuggestionChange(idx, k)}>
+        if((this.state.files[idx].suggestions)){
+            for(var i = 0; i < this.state.files[idx].suggestions.length; i++){
+                const k = i;
+                if(i === this.state.files[idx].suggestedIdx){
+                    continue;
+                }
+                s.push(
+                    <div key={k} id={k} style={{height: '50px', cursor:'pointer'}} onClick={() => this.onSuggestionChange(idx, k)}>
                     <SuggestionCell
-                        title={this.state.files[idx].suggestions[k].title}
-                        year={this.state.files[idx].suggestions[k].year}
-                        imgUrl={this.state.files[idx].suggestions[k].poster_url}
+                    type={'suggestion'}
+                    title={this.state.files[idx].suggestions[k].title}
+                    year={this.state.files[idx].suggestions[k].year}
+                    imgUrl={this.state.files[idx].suggestions[k].poster_url}
                     />
-                </div>
-            )
-
+                    </div>
+                )
+            }
         }
+
 
         return (
             <div>
-                <div>SearchBar</div>
-                {s}
+                <div style={{height: '50px', width: '100%'}}>{this.renderSuggestionSearchBar(idx)}</div>
+                <div>{s}</div>
             </div>
         )
     }
@@ -478,37 +475,69 @@ export default class Upload extends React.Component {
         for(var i = 0; i < this.state.selectedQue.length; i++){
             const idx = this.state.selectedQue[i];
 
-            var item = (
-                <div
-                    style={{border: '1px solid black', position: 'relative', overflow: 'auto'}}
-                    >
-                    <div style={{width: '100%'}}>{this.state.files[idx].name}</div>
-                    <div style={{border: '1px solid black', cursor:'pointer'}}onClick = {() => {
-                        var temp = this.state.files;
-                        temp[idx]['showSuggestions'] = !temp[idx]['showSuggestions'];
-                        this.setState({files: temp});
-                    }}>
-                        <img style={{float:'left'}} src={this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].poster_url}/>
-                        <div style={{float: 'left'}}>
-                            <div style={{}}>
-                            {this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].title}
-                            </div>
-                            <div>
-                            ({this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].year})
-                            </div>
+            var suggestionCell = (
+                <div>
+                    Not found
+                </div>
+            );
 
-                        </div>
+            var buttons = (
+                <div>No buttons</div>
+            )
+
+            if(this.state.files[idx].suggestions){
+                suggestionCell = (
+                    <div style={{height: '50px'}}>
+                        <SuggestionCell
+                            type={'suggestion'}
+                            title={this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].title}
+                            year={this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].year}
+                            imgUrl={this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].poster_url}
+                        />
                     </div>
+                );
+
+                buttons = (
                     <div>
+                        <button onClick = {() => {
+                            const url = 'https://imdb.com/title/' + this.state.files[idx].suggestions[this.state.files[idx].suggestedIdx].id;
+                            console.log(url);
+                            window.open(url, '_blank');
+                        }}
+                        >IMDB
+                        </button>
                         <button onClick = {() => {
                             this.onUpload(idx);
                         }}
                         >Upload
                         </button>
                     </div>
+                );
+            }
 
 
-                    {this.renderSuggestions(idx)}
+            var item = (
+                <div
+                    style={{position: 'relative', overflow: 'auto'}}
+                    >
+
+                    <div>
+                        <div style={{cursor:'pointer'}} onClick = {() => {
+                            var temp = this.state.files;
+                            temp[idx]['showSuggestions'] = !temp[idx]['showSuggestions'];
+                            this.setState({files: temp});
+                        }}>
+
+                            <div style={{width: '100%'}}>{this.state.files[idx].name}</div>
+                            {suggestionCell}
+                        </div>
+                            {buttons}
+
+                        <div>
+                            {this.renderSuggestions(idx)}
+                        </div>
+                    </div>
+
                 </div>
             )
 
@@ -545,8 +574,6 @@ export default class Upload extends React.Component {
 
     renderUploading(){
 
-        console.log('uploadingQue ', this.state.uploadingQue);
-        console.log('finishedQue ', this.state.finishedQue);
         var s = [];
         for(var i = 0; i < this.state.uploadingQue.length; i++){
 
@@ -573,7 +600,7 @@ export default class Upload extends React.Component {
     }
 
     renderExists(){
-        console.log('files, ',this.state.files);
+
         var files = [];
         for(var i = 0; i < this.state.existQue.length; i++){
             const k = i;
