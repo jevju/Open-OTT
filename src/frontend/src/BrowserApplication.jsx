@@ -17,75 +17,75 @@ export default class BrowserApplication extends React.Component{
 
     componentDidMount(){
         console.log('Fetching titles');
-
-        fetch('/library/title/')
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else{
-                throw new Error('Unable to fetch titles');
-            }
-        })
-        .then(data => {
-                if(data.titles.length > 0){
-                    var temp = this.state.titles;
-
-                    for(var i = 0; i < data.titles.length; i++){
-                        if(!(data.titles[i] in temp)){
-                            temp[data.titles[i]] = null;
-                        }
-                    }
-
-                    this.setState({titles: temp});
-                    console.log(temp);
-                }
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        //
+        // fetch('/library/title/')
+        // .then(res => {
+        //     if(res.ok){
+        //         return res.json();
+        //     } else{
+        //         throw new Error('Unable to fetch titles');
+        //     }
+        // })
+        // .then(data => {
+        //         if(data.titles.length > 0){
+        //             var temp = this.state.titles;
+        //
+        //             for(var i = 0; i < data.titles.length; i++){
+        //                 if(!(data.titles[i] in temp)){
+        //                     temp[data.titles[i]] = null;
+        //                 }
+        //             }
+        //
+        //             this.setState({titles: temp});
+        //             console.log(temp);
+        //         }
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
 
     }
 
     componentDidUpdate(){
-
-        var toRetrieve = "";
-        var titles = this.state.titles;
-        Object.keys(this.state.titles).forEach(function(k){
-            if(!(titles[k])){
-                toRetrieve += k + ',';
-            }
-        });
-
-        if(toRetrieve === ""){
-            return;
-        }
-
-
-        console.log('to retr ', toRetrieve);
-        fetch('/metadata/movie/?id=' + toRetrieve)
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else{
-                throw new Error('Unable to fetch metadata');
-            }
-        })
-        .then(data => {
-            console.log(data);
-
-            var temp = this.state.titles;
-            for(var i = 0; i < data.length; i++){
-                if(data[i].id in temp){
-                    temp[data[i].id] = data[i];
-                }
-            }
-            this.setState({titles: temp});
-
-
-        })
-        .catch((err) => {
-            console.log(err);
-        })
+        // 
+        // var toRetrieve = "";
+        // var titles = this.state.titles;
+        // Object.keys(this.state.titles).forEach(function(k){
+        //     if(!(titles[k])){
+        //         toRetrieve += k + ',';
+        //     }
+        // });
+        //
+        // if(toRetrieve === ""){
+        //     return;
+        // }
+        //
+        //
+        // console.log('to retr ', toRetrieve);
+        // fetch('/metadata/movie/?id=' + toRetrieve)
+        // .then(res => {
+        //     if(res.ok){
+        //         return res.json();
+        //     } else{
+        //         throw new Error('Unable to fetch metadata');
+        //     }
+        // })
+        // .then(data => {
+        //     console.log(data);
+        //
+        //     var temp = this.state.titles;
+        //     for(var i = 0; i < data.length; i++){
+        //         if(data[i].id in temp){
+        //             temp[data[i].id] = data[i];
+        //         }
+        //     }
+        //     this.setState({titles: temp});
+        //
+        //
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // })
 
         //
         // for(var i = 0; i < titles.length; i++){
