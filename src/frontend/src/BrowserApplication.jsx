@@ -47,7 +47,7 @@ export default class BrowserApplication extends React.Component{
     }
 
     componentDidUpdate(){
-        // 
+        //
         // var toRetrieve = "";
         // var titles = this.state.titles;
         // Object.keys(this.state.titles).forEach(function(k){
